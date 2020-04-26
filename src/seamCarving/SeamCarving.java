@@ -58,5 +58,37 @@ public class SeamCarving
 		//　
 	}
 
+	/**
+	 * fonction qui permet 
+	 * @param image
+	 * @return
+	 */
+	public int [][] interest(int[][] image){
+		int [][] facteurInterest = new int[image.length][image[0].length] ;
+		int voisinDeDroite ;
+		int voisinDeGauche ;
+		int moyenne ;
+		for (int i = 0 ; i < image.length ; i++){
+			for(int j = 0 ; j < image[i].length ; j++){
+				//si le pixel n'a pas de voisin de droite
+				if(j+1 >= image[i].length){
+					voisinDeGauche = image[i][j-1] ;
+					facteurInterest[i][j] = Math.abs(image[i][j] - voisinDeGauche);
+				}else if(j-1 < 0){ //si le pixel n'a pas de voisin de gauche
+					voisinDeDroite = image[i][j+1] ;
+					facteurInterest[i][j] = Math.abs(image[i][j] - voisinDeDroite) ;
+				}else if((j > 0) && (j < image[i].length)) {
+					//si il y a un voisin de droite et de gauche = pas de probleme
+					voisinDeDroite = image[i][j + 1];
+					voisinDeGauche = image[i][j - 1];
+					moyenne = (voisinDeDroite + voisinDeGauche) / 2;
+					facteurInterest[i][j] = Math.abs(image[i][j] - moyenne) ;
+
+				}
+			}
+		}
+		return facteurInterest ;
+	}
+
 
 }

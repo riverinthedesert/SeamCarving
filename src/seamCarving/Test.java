@@ -1,5 +1,5 @@
 
-package Java;
+package java;
 class Test
 {
    static boolean visite[];
@@ -35,11 +35,36 @@ class Test
 		dfs(g, 3);
 	 }
 
+	public static void testFonctionInterest(){
+		SeamCarving sc = new SeamCarving();
+		int[][] image = new int[3][4];
+		image[0][0] = 3 ;
+		image[0][1] = 11 ;
+		image[0][2] = 24 ;
+		image[0][3] = 39 ;
+		image[1][0] = 8 ;
+		image[1][1] = 21 ;
+		image[1][2] = 29 ;
+		image[1][3] = 39 ;
+		image[2][0] = 200 ;
+		image[2][1] = 60 ;
+		image[2][2] = 25 ;
+		image[2][3] = 0 ;
+		int [][] resultat = sc.interest(image);
+		for (int i = 0 ; i < 3 ; i++){
+			for (int j = 0 ; j < 4 ; j++){
+				System.out.println(resultat[i][j]);
+			}
+		}
+
+
+	}
+
 
    
    public static void main(String[] args)
 	 {
 		testGraph();
-
+		 testFonctionInterest();
 	 }
 }
