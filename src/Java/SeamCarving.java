@@ -2,6 +2,8 @@ package Java;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.*;
+import Java.Graph;
+import Java.Edge;
 public class SeamCarving
 {
 
@@ -37,26 +39,46 @@ public class SeamCarving
         }
     }
 
+	/**
+	 * fonction qui ecrit un fichier pgm
+	 * @param image tableau de image
+	 * @param filename nom de fichier pgm
+	 */
+
     public void writepgm(int[][] image, String filename) throws  IOException{
-		DataOutputStream writeFile = new DataOutputStream(new FileOutputStream(filename));
 
-		// Write the .pgm header (P5, 800 600, 250)
-		String type="pgm",width="600",height="600",max="250";
+	/*	String PGMInfo = "P5" + Convert.ToChar(10) + '#' +
+				" " + Convert.ToChar(10) +
+				iw.ToString() + " " +
+				ih.ToString() + Convert.ToChar(10) +
+				"256" + Convert.ToChar(10);
+		FileOutputStream OutputStream = File.createTempFile("ressource/IMAGES"+filename);
+		BinaryWriter PGMWriter = new BinaryWriter(OutputStream);
+		byte[] PGMInfoBuffer = System.Text.ASCIIEncoding.Default.GetBytes(PGMInfo);
+		PGMWriter.Write(PGMInfoBuffer);
+		byte[] data = new byte[iw * ih];
+		for (int j = 0; j < ih; j++)
+			for (int i = 0; i < iw; i++)
+				data[i + j * iw] = (byte)bm.GetPixel(i, j).R;
+		PGMWriter.Write(data);
+		PGMWriter.Close();*/
 
-	//	writeFile.writeUTF(type + "\n");
-	//	writeFile.writeUTF(width + "  " + height + "\n");
-	//	writeFile.writeUTF(max + "\n");
-		for(int i = 0; i < Integer.parseInt(height); i++){
-			for(int j = 0; j < Integer.parseInt(width); j++){
-				writeFile.write(image[i][j]);
-			//	writeFile.writeByte(image[i][j]); //Write the number
-			//	writeFile.writeUTF(" "); //Add white space
+		DataOutputStream writeFile = new DataOutputStream(new FileOutputStream("ressource/IMAGES"+filename));
+		// Write the .pgm header (P5, 800 600, 256)
+		writeFile.writeUTF("P5" + "\n");
+		writeFile.writeUTF(image.length + " " + image[0].length + "\n");
+		writeFile.writeUTF("256" + "\n");
+
+		for(int i = 0; i < image.length; i++){
+			for(int j = 0; j < image[0].length; j++){
+				writeFile.write(image[i][j]); //ecriture
 			}
-	//		writeFile.writeUTF(" \n"); //finished one line so drop to next
+			writeFile.writeUTF(" \n"); //changer ligne
 		}
 		writeFile.close();
-		//　
+
 	}
+
 
 	/**
 	 * fonction qui prend  une  image  et  qui  renvoie  untableau de la mˆeme taille, contenant, pour chaque pixel, son facteur d’int ́erˆet
@@ -118,6 +140,40 @@ public class SeamCarving
 			}
 		}
 		return valeurDuSommet;
+	}
+
+	/**
+	 * fonction qui créer le graphe correspondant au tableau itr
+	 * @param itr tableau d'itr
+	 * @return un graph
+	 */
+    public  Graph tograph(int[][] itr) {
+		Graph graph=new Java.GraphArrayList(itr.length*itr[0].length+1);
+
+		// edge dans le début  de la graphe
+		for (int j=0;j<itr[0].length;j++) {
+			graph.addEdge(new Edge(0,j+1,0));
+		}
+
+		// edge dans intermédiaire de la graphe
+		for(int i=0;i<itr.length-1;i++){
+			graph.addEdge(new Edge(i*itr[0].length+1,(i+1)*itr[0].length,itr[i][0]));
+			graph.addEdge(new Edge(i*itr[0].length+1,(i+1)*itr[0].length+1,itr[i][0]));
+			for (int j=1;j<itr[0].length-1;j++) {
+				graph.addEdge(new Edge(i*itr[0].length+j+1,(i+1)*itr[0].length+j,itr[i][j]));
+				graph.addEdge(new Edge(i*itr[0].length+j+1,(i+1)*itr[0].length+j+1,itr[i][j]));
+				graph.addEdge(new Edge(i*itr[0].length+j+1,(i+1)*itr[0].length+j+2,itr[i][j]));
+			}
+			graph.addEdge(new Edge((i+1)*itr[0].length,(i+2)*itr[0].length,itr[i][itr[0].length-1]));
+			graph.addEdge(new Edge((i+1)*itr[0].length,(i+2)*itr[0].length-1,itr[i][itr[0].length-1]));
+		}
+
+		// edge dans le but  de la graphe
+		for (int j=0;j<itr[0].length;j++) {
+			graph.addEdge(new Edge((itr.length-1)*itr[0].length+j+1,itr.length*itr[0].length+1,itr[itr.length-1][j]));
+		}
+
+		return graph;
 	}
 
 }

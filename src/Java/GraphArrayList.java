@@ -1,7 +1,8 @@
 package Java;
 import java.util.ArrayList;
 import java.io.*;
-
+import Java.Edge;
+import Java.Graph;
 public class GraphArrayList implements Graph
 {
    private ArrayList<Edge>[] adj;

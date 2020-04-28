@@ -1,5 +1,9 @@
 
-package java;
+package Java;
+import Java.Graph;
+import Java.Edge;
+import Java.GraphArrayList;
+import Java.SeamCarving;
 class Test
 {
    static boolean visite[];

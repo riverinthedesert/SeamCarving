@@ -1,6 +1,6 @@
 package Java;
 import java.io.*;
-
+import Java.Edge;
 public interface Graph
 {
    public int vertices();
@@ -8,6 +8,8 @@ public interface Graph
 
    public Iterable<Edge> next(int v);
    public Iterable<Edge> prev(int v);
+
+   public void addEdge(Edge e);
 
     public default void writeFile(String s)
     {

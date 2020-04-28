@@ -1,6 +1,7 @@
 package Java;
 import java.util.ArrayList;
-
+import Java.Graph;
+import Java.Edge;
 class GraphImplicit implements Graph{
     int N;
     
@@ -12,6 +13,8 @@ class GraphImplicit implements Graph{
     public int vertices(){
 	return N;
     }
+
+	public void addEdge(Edge e){}
     
 @SuppressWarnings("unchecked")    
     public Iterable<Edge> next(int v)
