@@ -59,9 +59,9 @@ public class SeamCarving
 	}
 
 	/**
-	 * fonction qui permet 
-	 * @param image
-	 * @return
+	 * fonction qui prend  une  image  et  qui  renvoie  untableau de la mˆeme taille, contenant, pour chaque pixel, son facteur d’int ́erˆet
+	 * @param image l'image concernee
+	 * @return un tableau
 	 */
 	public int [][] interest(int[][] image){
 		int [][] facteurInterest = new int[image.length][image[0].length] ;
@@ -90,5 +90,34 @@ public class SeamCarving
 		return facteurInterest ;
 	}
 
+	/**
+	 * Fonction qui qui calcule le chemin de coˆut minimal entreles sommetssettdans le grapheG
+	 * @param g le graphe
+	 * @param s le sommet de depart
+	 * @param t le sommet d'arrivee
+	 * @return un tableau 
+	 */
+	public int[] bellman_ford(Graph g, int s , int t){ // graphe g sommet de depart s et sommer d'arrivee t
+		int [] valeurDuSommet = new int[t-s] ;
+		//int []parent = new int[t];
+
+		for(int i = 0 ; i < t-s ; i++){
+			valeurDuSommet[i] = Integer.MAX_VALUE ; //+ L'INFINI;
+
+		}
+		valeurDuSommet[s] = 0 ;
+		for (int j = s ; j < t ; j++ ){
+			for (Edge e : g.next (j)){
+
+
+				if (valeurDuSommet[j] >(valeurDuSommet[e.from] + e.cost) ){ //from sommet de depart , to sommet d'arriver , cost le cout de l'arc
+
+					valeurDuSommet[j] = (valeurDuSommet[e.from] + e.cost) ;
+					// inutile : parent[j] = e.to ;
+				}
+			}
+		}
+		return valeurDuSommet;
+	}
 
 }
