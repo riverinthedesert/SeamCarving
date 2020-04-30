@@ -63,7 +63,7 @@ public class SeamCarving
 		PGMWriter.Write(data);
 		PGMWriter.Close();*/
 		try {
-			DataOutputStream writeFile = new DataOutputStream(new FileOutputStream("ressource/IMAGES" + filename));
+			DataOutputStream writeFile = new DataOutputStream(new FileOutputStream(filename));
 			// Write the .pgm header (P5, 800 600, 256)
 			writeFile.writeUTF("P5" + "\n");
 			writeFile.writeUTF(image.length + " " + image[0].length + "\n");
@@ -152,7 +152,7 @@ public class SeamCarving
 	 * @return un graph
 	 */
     public  Graph tograph(int[][] itr) {
-		Graph graph=new Java.GraphArrayList(itr.length*itr[0].length+1);
+		Graph graph=new Java.GraphArrayList(itr.length*itr[0].length+2);
 
 		// edge dans le début  de la graphe
 		for (int j=0;j<itr[0].length;j++) {
@@ -190,7 +190,7 @@ public class SeamCarving
 		int[][] itr=interest(image);
 		Graph graph=tograph(itr);
 		bellman_ford(graph,0,itr.length*itr[0].length+1);
-		writepgm(itr,fn+"1");
+		writepgm(itr,fn);
 	}
 
 
