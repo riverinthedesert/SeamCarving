@@ -70,5 +70,7 @@ class Test
 	 {
 		testGraph();
 		 testFonctionInterest();
+		 SeamCarving seamCarving=new SeamCarving();
+		 seamCarving.seamCarving("ressource/IMAGES/ex1.pgm");
 	 }
 }
