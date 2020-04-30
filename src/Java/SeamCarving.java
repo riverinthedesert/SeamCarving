@@ -45,7 +45,7 @@ public class SeamCarving
 	 * @param filename nom de fichier pgm
 	 */
 
-    public void writepgm(int[][] image, String filename) throws  IOException{
+    public void writepgm(int[][] image, String filename){
 
 	/*	String PGMInfo = "P5" + Convert.ToChar(10) + '#' +
 				" " + Convert.ToChar(10) +
@@ -62,20 +62,24 @@ public class SeamCarving
 				data[i + j * iw] = (byte)bm.GetPixel(i, j).R;
 		PGMWriter.Write(data);
 		PGMWriter.Close();*/
+		try {
+			DataOutputStream writeFile = new DataOutputStream(new FileOutputStream("ressource/IMAGES" + filename));
+			// Write the .pgm header (P5, 800 600, 256)
+			writeFile.writeUTF("P5" + "\n");
+			writeFile.writeUTF(image.length + " " + image[0].length + "\n");
+			writeFile.writeUTF("256" + "\n");
 
-		DataOutputStream writeFile = new DataOutputStream(new FileOutputStream("ressource/IMAGES"+filename));
-		// Write the .pgm header (P5, 800 600, 256)
-		writeFile.writeUTF("P5" + "\n");
-		writeFile.writeUTF(image.length + " " + image[0].length + "\n");
-		writeFile.writeUTF("256" + "\n");
-
-		for(int i = 0; i < image.length; i++){
-			for(int j = 0; j < image[0].length; j++){
-				writeFile.write(image[i][j]); //ecriture
+			for (int i = 0; i < image.length; i++) {
+				for (int j = 0; j < image[0].length; j++) {
+					writeFile.write(image[i][j]); //ecriture
+				}
+				writeFile.writeUTF(" \n"); //changer ligne
 			}
-			writeFile.writeUTF(" \n"); //changer ligne
+			writeFile.close();
 		}
-		writeFile.close();
+		catch(Throwable t) {
+			t.printStackTrace(System.err) ;
+		}
 
 	}
 
@@ -175,5 +179,19 @@ public class SeamCarving
 
 		return graph;
 	}
+
+
+	/**
+	 * fonction qui réduit la taille d’une image bas ́ee sur l’algorithmique des graphes.
+	 * @param fn nom de fichier pgm
+	 */
+	public  void seamCarving(String fn) {
+		int[][] image=readpgm(fn);
+		int[][] itr=interest(image);
+		Graph graph=tograph(itr);
+		bellman_ford(graph,0,itr.length*itr[0].length+1);
+		writepgm(itr,fn+"1");
+	}
+
 
 }
