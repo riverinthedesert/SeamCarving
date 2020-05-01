@@ -62,8 +62,16 @@ public class SeamCarving
 				data[i + j * iw] = (byte)bm.GetPixel(i, j).R;
 		PGMWriter.Write(data);
 		PGMWriter.Close();*/
+		FileOutputStream fop = null;
+		File file;
 		try {
-			DataOutputStream writeFile = new DataOutputStream(new FileOutputStream(filename));
+			file= new File(this.getClass().getResource("/").getPath()+"new");
+			fop= new FileOutputStream(file);
+			//si le fichier n'exist pas
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			DataOutputStream writeFile = new DataOutputStream(fop);
 			// Write the .pgm header (P5, 800 600, 256)
 			writeFile.writeUTF("P5" + "\n");
 			writeFile.writeUTF(image.length + " " + image[0].length + "\n");
