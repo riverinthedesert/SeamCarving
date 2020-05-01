@@ -65,7 +65,8 @@ public class SeamCarving
 		FileOutputStream fop = null;
 		File file;
 		try {
-			file= new File(this.getClass().getResource("/").getPath()+"new");
+			file= new File(this.getClass().getResource("/").getPath()+"new.pgm");
+			System.out.println (file);
 			fop= new FileOutputStream(file);
 			//si le fichier n'exist pas
 			if (!file.exists()) {
