@@ -53,13 +53,12 @@ public class SeamCarving
 		FileWriter writeFile;
 		try {
 			file= new File(this.getClass().getResource("/").getPath()+"new.pgm");
-			//System.out.println (file);
-			//fop= new FileOutputStream(file);
+
 			//si le fichier n'exist pas
-			/*if (!file.exists()) {
+			if (!file.exists()) {
 				file.createNewFile();
-			}*/
-			writeFile = new FileWriter ((this.getClass().getResource("/").getPath()+"new.pgm"));
+			}
+			writeFile = new FileWriter (file);
 			writeFile.write("P2\n");
 			writeFile.write(image[0].length + " " + image.length + "\n");
 			writeFile.write("255\n");
@@ -99,7 +98,7 @@ public class SeamCarving
 				}else if(j-1 < 0){ //si le pixel n'a pas de voisin de gauche
 					voisinDeDroite = image[i][j+1] ;
 					facteurInterest[i][j] = Math.abs(image[i][j] - voisinDeDroite) ;
-				}else if((j > 0) && (j < image[i].length)) {
+				}else if(j < image[i].length) {
 					//si il y a un voisin de droite et de gauche = pas de probleme
 					voisinDeDroite = image[i][j + 1];
 					voisinDeGauche = image[i][j - 1];
@@ -176,7 +175,15 @@ public class SeamCarving
 		return graph;
 	}
 
+	/**
+	 * Fonction intermediaire qui permet d'appliquer une fois bellman ford pour supprimer une colonne de pixel sur l'image
+	 * @param graph le graph de depard
+	 * @param image l'image traité
+	 * @param itr tableau des facteur d'interet de l'image
+	 * @return la nouvelle image
+	 */
 	public int[][] imageDecoupe(Graph graph, int[][] image, int[][] itr){
+        itr=interest(image);
     	int[] bf = bellman_ford(graph,0,itr.length*itr[0].length+1);
 		int[][] nouveauTableau = new int[image.length][image[0].length-1]; //a modifier
 		for (int i = 0 ; i < image.length ; i++){
