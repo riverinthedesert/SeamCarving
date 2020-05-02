@@ -120,25 +120,31 @@ public class SeamCarving
 	 */
 	public int[] bellman_ford(Graph g, int s , int t){ // graphe g sommet de depart s et sommer d'arrivee t
 		int [] valeurDuSommet = new int[t-s] ;
-		//int []parent = new int[t];
+		int []parent = new int[t-s];
 
 		for(int i = 0 ; i < t-s ; i++){
 			valeurDuSommet[i] = Integer.MAX_VALUE ; //+ L'INFINI;
-
+			//System.out.println (valeurDuSommet[i]);
 		}
-		valeurDuSommet[s] = 0 ;
-		for (int j = s ; j < t ; j++ ){
+		valeurDuSommet[0] = 0 ;
+		for (int j = 0 ; j < t-s ; j++ ){
 			for (Edge e : g.next (j)){
 
 
 				if (valeurDuSommet[j] >(valeurDuSommet[e.from] + e.cost) ){ //from sommet de depart , to sommet d'arriver , cost le cout de l'arc
 
 					valeurDuSommet[j] = (valeurDuSommet[e.from] + e.cost) ;
+					parent[j] = e.to;
+
 					// inutile : parent[j] = e.to ;
+				}else{
+					//System.out.println(parent[j]);
 				}
 			}
+
 		}
-		return valeurDuSommet;
+		//return valeurDuSommet;
+		return parent;
 	}
 
 	/**
@@ -177,24 +183,42 @@ public class SeamCarving
 
 	/**
 	 * Fonction intermediaire qui permet d'appliquer une fois bellman ford pour supprimer une colonne de pixel sur l'image
-	 * @param graph le graph de depard
 	 * @param image l'image traité
-	 * @param itr tableau des facteur d'interet de l'image
 	 * @return la nouvelle image
 	 */
-	public int[][] imageDecoupe(Graph graph, int[][] image, int[][] itr){
-        itr=interest(image);
+	public int[][] imageDecoupe(int[][] image){
+        //itr=interest(image);
+		int[][] itr=interest(image);// juste pour bellman
+		Graph graph=tograph(itr);
+		//graph.writeFile ("test");
     	int[] bf = bellman_ford(graph,0,itr.length*itr[0].length+1);
 		int[][] nouveauTableau = new int[image.length][image[0].length-1]; //a modifier
+		int k = 0 ;
+		int l = 0 ;
 		for (int i = 0 ; i < image.length ; i++){
+			//System.out.println (bf[i]);
 			for (int j = 0 ; j < image[0].length - 1 ; j++){
-				if(image[i][j] != bf[i]){
+
+				////////////////////////////////////////////////////////////////////////////////////
+				//c'est la que ça plante j'arrive pas a gerer l'implémentation differente
+				////////////////////////////////////////////////////////////////////////////////////
+				//System.out.print (image[i][j]);
+				if(i*image[0].length+j != bf[i]){//if(image[i][j] != bf[i]){
 					nouveauTableau[i][j] = image[i][j] ;
+
+
+
 				}else{
-					nouveauTableau[i][j] = image[i][j+1];
-					j++ ;
+					//l--;
+
+					//nouveauTableau[i][j] = image[i][j+1];
+					//j++ ;
 				}
+
 			}
+
+
+			//System.out.println();
 		}
 		return nouveauTableau;
 	}
@@ -212,16 +236,17 @@ public class SeamCarving
 			}
 			System.out.println ();
 		}*/
-		int[][] itr=interest(image);// juste pour bellman
-		Graph graph=tograph(itr);
 
-		int[][] nouveauTableau = imageDecoupe(graph, image, itr);
-		for (int i = 1 ; i < 300  ; i++){
-			nouveauTableau = imageDecoupe(graph, nouveauTableau, itr);
+//int[][] itr=interest(image);
+		//int[][] nouveauTableau ;// = imageDecoupe(graph, image, itr);
+		for (int i = 0 ; i < 300  ; i++){
+			image = imageDecoupe(image);
 		}
 
-		writepgm(nouveauTableau,fn);//avec le nouv tab
+		writepgm(image,fn);//avec le nouv tab
 
+		//int[][] itr=interest(image);
+		//writepgm(itr,fn);
 	}
 
 
