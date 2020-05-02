@@ -68,9 +68,9 @@ class Test
    
    public static void main(String[] args)
 	 {
-		testGraph();
-		 testFonctionInterest();
+		//testGraph();
+		 //testFonctionInterest();
 		 SeamCarving seamCarving=new SeamCarving();
-		 seamCarving.seamCarving("ressource/IMAGES/ex1.pgm");
+		 seamCarving.seamCarving("ressource/IMAGES/chat.pgm");
 	 }
 }

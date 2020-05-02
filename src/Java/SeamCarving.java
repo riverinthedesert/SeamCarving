@@ -44,45 +44,32 @@ public class SeamCarving
 	 * @param image tableau de image
 	 * @param filename nom de fichier pgm
 	 */
-
     public void writepgm(int[][] image, String filename){
 
-	/*	String PGMInfo = "P5" + Convert.ToChar(10) + '#' +
-				" " + Convert.ToChar(10) +
-				iw.ToString() + " " +
-				ih.ToString() + Convert.ToChar(10) +
-				"256" + Convert.ToChar(10);
-		FileOutputStream OutputStream = File.createTempFile("ressource/IMAGES"+filename);
-		BinaryWriter PGMWriter = new BinaryWriter(OutputStream);
-		byte[] PGMInfoBuffer = System.Text.ASCIIEncoding.Default.GetBytes(PGMInfo);
-		PGMWriter.Write(PGMInfoBuffer);
-		byte[] data = new byte[iw * ih];
-		for (int j = 0; j < ih; j++)
-			for (int i = 0; i < iw; i++)
-				data[i + j * iw] = (byte)bm.GetPixel(i, j).R;
-		PGMWriter.Write(data);
-		PGMWriter.Close();*/
+
+
 		FileOutputStream fop = null;
 		File file;
+		FileWriter writeFile;
 		try {
 			file= new File(this.getClass().getResource("/").getPath()+"new.pgm");
-			System.out.println (file);
-			fop= new FileOutputStream(file);
+			//System.out.println (file);
+			//fop= new FileOutputStream(file);
 			//si le fichier n'exist pas
-			if (!file.exists()) {
+			/*if (!file.exists()) {
 				file.createNewFile();
-			}
-			DataOutputStream writeFile = new DataOutputStream(fop);
-			// Write the .pgm header (P5, 800 600, 256)
-			writeFile.writeUTF("P5" + "\n");
-			writeFile.writeUTF(image.length + " " + image[0].length + "\n");
-			writeFile.writeUTF("256" + "\n");
+			}*/
+			writeFile = new FileWriter ((this.getClass().getResource("/").getPath()+"new.pgm"));
+			writeFile.write("P2\n");
+			writeFile.write(image[0].length + " " + image.length + "\n");
+			writeFile.write("255\n");
 
 			for (int i = 0; i < image.length; i++) {
 				for (int j = 0; j < image[0].length; j++) {
-					writeFile.write(image[i][j]); //ecriture
+					writeFile.write(image[i][j]+" "); //ecriture
+					//System.out.print (image[i][j]);
 				}
-				writeFile.writeUTF(" \n"); //changer ligne
+				writeFile.write("\n"); //changer ligne
 			}
 			writeFile.close();
 		}
@@ -189,6 +176,22 @@ public class SeamCarving
 		return graph;
 	}
 
+	public int[][] imageDecoupe(Graph graph, int[][] image, int[][] itr){
+    	int[] bf = bellman_ford(graph,0,itr.length*itr[0].length+1);
+		int[][] nouveauTableau = new int[image.length][image[0].length-1]; //a modifier
+		for (int i = 0 ; i < image.length ; i++){
+			for (int j = 0 ; j < image[0].length - 1 ; j++){
+				if(image[i][j] != bf[i]){
+					nouveauTableau[i][j] = image[i][j] ;
+				}else{
+					nouveauTableau[i][j] = image[i][j+1];
+					j++ ;
+				}
+			}
+		}
+		return nouveauTableau;
+	}
+
 
 	/**
 	 * fonction qui réduit la taille d’une image bas ́ee sur l’algorithmique des graphes.
@@ -196,10 +199,22 @@ public class SeamCarving
 	 */
 	public  void seamCarving(String fn) {
 		int[][] image=readpgm(fn);
-		int[][] itr=interest(image);
+		/*for(int i = 0 ; i < image.length ; i++){
+			for (int j = 0 ; j < image[0].length; j++){
+				System.out.print (image[i][j]);
+			}
+			System.out.println ();
+		}*/
+		int[][] itr=interest(image);// juste pour bellman
 		Graph graph=tograph(itr);
-		bellman_ford(graph,0,itr.length*itr[0].length+1);
-		writepgm(itr,fn);
+
+		int[][] nouveauTableau = imageDecoupe(graph, image, itr);
+		for (int i = 1 ; i < 300  ; i++){
+			nouveauTableau = imageDecoupe(graph, nouveauTableau, itr);
+		}
+
+		writepgm(nouveauTableau,fn);//avec le nouv tab
+
 	}
 
 
