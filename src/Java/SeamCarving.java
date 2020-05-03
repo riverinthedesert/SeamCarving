@@ -122,13 +122,15 @@ public class SeamCarving
 		int [] valeurDuSommet = new int[t-s+1] ;
 		int []parent = new int[t-s+1];
 
-		for(int i = 0 ; i < t-s ; i++){
+		for(int i = 0 ; i <= t-s ; i++){
 			valeurDuSommet[i] = Integer.MAX_VALUE ; //+ L'INFINI;
 			//System.out.println (valeurDuSommet[i]);s
 		}
 		valeurDuSommet[s] = 0 ;
 		for (int j = s; j <t; j++) {
                 for (Edge e : g.next(j)) {
+
+
 
                     if (valeurDuSommet[e.to] > (valeurDuSommet[e.from] + e.cost)) { //from sommet de depart , to sommet d'arriver , cost le cout de l'arc
                         valeurDuSommet[e.to] = (valeurDuSommet[e.from] + e.cost);
@@ -154,9 +156,8 @@ public class SeamCarving
      * @return int[] tableau  de point
      */
 	public int[] chemin(int[] parent ,int s,int t){
-        int ptfin=t-1;
+        int ptfin=t;
         ArrayList<Integer> parentchemin=new ArrayList<>(t-s+1);
-
         while(ptfin!=0){
             parentchemin.add(parent[ptfin]);
             ptfin=parent[ptfin];
@@ -225,14 +226,14 @@ public class SeamCarving
 		}*/
 			//graph.writeFile ("test");
 			int[] bf = bellman_ford(graph, 0, itr.length * itr[0].length + 1);
-		//		System.out.println(Arrays.toString(bf));
-        //   System.out.println(bf[374]);
-			nouveauTableau = new int[image.length][image[0].length-1]; //a modifier
+		/*	System.out.println(image.length);
+			System.out.println(Arrays.toString(bf));
+            System.out.println(bf[374]);
+            System.out.println(bf[373]);*/
+			nouveauTableau = new int[itr.length][itr[0].length-1]; //a modifier
 			int k = 0;
-			int l = 0;
-			int nb = 0;
 			//	System.out.println(image[0].length);
-			for (int i = 0; i < image.length-1; i++) {
+			for (int i = 0; i < itr.length; i++) {
 				//System.out.println (bf[i]);
 			/*	for (int j = 0; j < image[0].length - 1; j++) {
 
@@ -246,11 +247,13 @@ public class SeamCarving
 
 					}*/
 					int j=0;
-					while(j<image[0].length - 1){
-                        if (i * itr[0].length + j != bf[image.length-i-2]) {
+					while(j<image[0].length - 2){
+                        if (i * itr[0].length + j+1 != bf[image.length-i-1]) {
                             nouveauTableau[i][j] = image[i][j];
                         } else {
-                            nouveauTableau[i][j] = 255;
+                         //   k=k+1;
+                        //    System.out.println("foid"+k);
+                            nouveauTableau[i][j] = image[i][j+1];
                             j++;
                         }
                         j++;
