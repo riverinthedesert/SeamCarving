@@ -270,22 +270,13 @@ public class SeamCarving
 	 */
 	public  void seamCarving(String fn) {
 		int[][] image=readpgm(fn);
-		/*for(int i = 0 ; i < image.length ; i++){
-			for (int j = 0 ; j < image[0].length; j++){
-				System.out.print (image[i][j]);
-			}
-			System.out.println ();
-		}*/
 
 //int[][] itr=interest(image);
 		//int[][] nouveauTableau ;// = imageDecoupe(graph, image, itr);
 		//for (int i = 0 ; i < 300  ; i++){
 			image = imageDecoupe(image);
 //		}
-		writepgm(image,fn);//avec le nouv tab
-
-		//int[][] itr=interest(image);
-		//writepgm(itr,fn);
+		writepgm(image,fn);
 	}
 
 
