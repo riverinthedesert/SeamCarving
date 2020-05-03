@@ -212,7 +212,7 @@ public class SeamCarving
 	 */
 	public int[][] imageDecoupe(int[][] image){
 		int[][] nouveauTableau=new int[image.length][image[0].length - 1];
-		for(int m=0;m<300;m++) {
+		for(int m=0;m<100;m++) {
 			//itr=interest(image);
 			int[][] itr = interest(image);// juste pour bellman
 			Graph graph = tograph(itr);
@@ -234,24 +234,26 @@ public class SeamCarving
 			//	System.out.println(image[0].length);
 			for (int i = 0; i < image.length-1; i++) {
 				//System.out.println (bf[i]);
-				for (int j = 0; j < image[0].length - 1; j++) {
+			/*	for (int j = 0; j < image[0].length - 1; j++) {
 
-					//System.out.print (image[i][j]);
 					if (i * itr[0].length + j != bf[image.length-i-2]) {//if(image[i][j] != bf[i]){
 						nouveauTableau[i][j] = image[i][j];
 
 					} else {
-						//		nb=nb+1;
-						//		System.out.println("vrai"+nb);
-						nouveauTableau[i][j] = image[i][j + 1];
-					//	nb++;
-				//		System.out.println(nb);
-						//l--;
 
-						//nouveauTableau[i][j] = image[i][j+1];
-						//j++ ;
-					}
+						nouveauTableau[i][j] = image[i][j+1];
+						j++;
 
+					}*/
+					int j=0;
+					while(j<image[0].length - 1){
+                        if (i * itr[0].length + j != bf[image.length-i-2]) {
+                            nouveauTableau[i][j] = image[i][j];
+                        } else {
+                            nouveauTableau[i][j] = 255;
+                            j++;
+                        }
+                        j++;
 				}
 
 				//System.out.println();
