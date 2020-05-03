@@ -213,53 +213,24 @@ public class SeamCarving
 	 */
 	public int[][] imageDecoupe(int[][] image){
 		int[][] nouveauTableau=new int[image.length][image[0].length - 1];
-		for(int m=0;m<100;m++) {
-			//itr=interest(image);
-			int[][] itr = interest(image);// juste pour bellman
+		for(int m=0;m<300;m++) {
+			int[][] itr = interest(image);
 			Graph graph = tograph(itr);
-		/*	for(Edge e:graph.next(0)){
-			System.out.println(e.to);
-		}
-		for(Edge E:graph.prev(itr.length*itr[0].length+1)){
-			System.out.println(E.from);
-			System.out.println(E.cost);
-		}*/
-			//graph.writeFile ("test");
 			int[] bf = bellman_ford(graph, 0, itr.length * itr[0].length + 1);
-		/*	System.out.println(image.length);
-			System.out.println(Arrays.toString(bf));
-            System.out.println(bf[374]);
-            System.out.println(bf[373]);*/
 			nouveauTableau = new int[itr.length][itr[0].length-1]; //a modifier
 			int k = 0;
-			//	System.out.println(image[0].length);
 			for (int i = 0; i < itr.length; i++) {
-				//System.out.println (bf[i]);
-			/*	for (int j = 0; j < image[0].length - 1; j++) {
-
-					if (i * itr[0].length + j != bf[image.length-i-2]) {//if(image[i][j] != bf[i]){
-						nouveauTableau[i][j] = image[i][j];
-
-					} else {
-
-						nouveauTableau[i][j] = image[i][j+1];
-						j++;
-
-					}*/
 					int j=0;
+					int delay=0;
 					while(j<image[0].length - 2){
                         if (i * itr[0].length + j+1 != bf[image.length-i-1]) {
-                            nouveauTableau[i][j] = image[i][j];
+                            nouveauTableau[i][j] = image[i][j+delay];
                         } else {
-                         //   k=k+1;
-                        //    System.out.println("foid"+k);
-                            nouveauTableau[i][j] = image[i][j+1];
-                            j++;
+							delay++;
+                            nouveauTableau[i][j] = image[i][j+delay];
                         }
                         j++;
 				}
-
-				//System.out.println();
 			}
 			image = nouveauTableau;
 		}
@@ -273,12 +244,7 @@ public class SeamCarving
 	 */
 	public  void seamCarving(String fn) {
 		int[][] image=readpgm(fn);
-
-//int[][] itr=interest(image);
-		//int[][] nouveauTableau ;// = imageDecoupe(graph, image, itr);
-		//for (int i = 0 ; i < 300  ; i++){
-			image = imageDecoupe(image);
-//		}
+		image = imageDecoupe(image);
 		writepgm(image,fn);
 	}
 
