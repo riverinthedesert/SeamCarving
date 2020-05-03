@@ -4,7 +4,7 @@ import Java.Graph;
 import Java.Edge;
 class GraphImplicit implements Graph{
     int N;
-    
+
 @SuppressWarnings("unchecked")    
     GraphImplicit(int N){
 	this.N = N;

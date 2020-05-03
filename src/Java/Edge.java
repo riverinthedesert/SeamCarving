@@ -10,5 +10,5 @@ class Edge
 		this.to = y;
 		this.cost = cost;
 	 }
-   
+
 }

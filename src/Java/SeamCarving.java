@@ -119,33 +119,57 @@ public class SeamCarving
 	 * @return un tableau 
 	 */
 	public int[] bellman_ford(Graph g, int s , int t){ // graphe g sommet de depart s et sommer d'arrivee t
-		int [] valeurDuSommet = new int[t-s] ;
-		int []parent = new int[t-s];
+		int [] valeurDuSommet = new int[t-s+1] ;
+		int []parent = new int[t-s+1];
 
 		for(int i = 0 ; i < t-s ; i++){
 			valeurDuSommet[i] = Integer.MAX_VALUE ; //+ L'INFINI;
-			//System.out.println (valeurDuSommet[i]);
+			//System.out.println (valeurDuSommet[i]);s
 		}
-		valeurDuSommet[0] = 0 ;
-		for (int j = 0 ; j < t-s ; j++ ){
-			for (Edge e : g.next (j)){
+		valeurDuSommet[s] = 0 ;
+		for (int j = s; j <t; j++) {
+                for (Edge e : g.next(j)) {
 
-
-				if (valeurDuSommet[j] >(valeurDuSommet[e.from] + e.cost) ){ //from sommet de depart , to sommet d'arriver , cost le cout de l'arc
-
-					valeurDuSommet[j] = (valeurDuSommet[e.from] + e.cost) ;
-					parent[j] = e.to;
-
-					// inutile : parent[j] = e.to ;
-				}else{
-					//System.out.println(parent[j]);
-				}
-			}
+                    if (valeurDuSommet[e.to] > (valeurDuSommet[e.from] + e.cost)) { //from sommet de depart , to sommet d'arriver , cost le cout de l'arc
+                        valeurDuSommet[e.to] = (valeurDuSommet[e.from] + e.cost);
+                        //	parent[j] = e.from;
+                        parent[e.to]=e.from;
+                        // inutile : parent[j] = e.to ;
+                    }
+                }
 
 		}
-		//return valeurDuSommet;
-		return parent;
+
+		int[] chemin=chemin(parent,s,t);
+
+		return chemin;
 	}
+
+
+    /**
+     * Fonction qui trouve le chemin cout minimale
+     * @param parent tableau de parent
+     * @param s point initial
+     * @param t point final
+     * @return int[] tableau  de point
+     */
+	public int[] chemin(int[] parent ,int s,int t){
+        int ptfin=t-1;
+        ArrayList<Integer> parentchemin=new ArrayList<>(t-s+1);
+
+        while(ptfin!=0){
+            parentchemin.add(parent[ptfin]);
+            ptfin=parent[ptfin];
+        }
+
+        int[] chemin = new int[parentchemin.size()];
+        for(int i = 0;i<parentchemin.size();i++){
+            chemin[i] = parentchemin.get(i);
+        }
+      //  System.out.println(Arrays.toString(chemin));
+        return chemin;
+    }
+
 
 	/**
 	 * fonction qui créer le graphe correspondant au tableau itr
@@ -153,7 +177,7 @@ public class SeamCarving
 	 * @return un graph
 	 */
     public  Graph tograph(int[][] itr) {
-		Graph graph=new Java.GraphArrayList(itr.length*itr[0].length+2);
+		Graph graph=new GraphArrayList(itr.length*itr[0].length+2);
 
 		// edge dans le début  de la graphe
 		for (int j=0;j<itr[0].length;j++) {
@@ -187,38 +211,52 @@ public class SeamCarving
 	 * @return la nouvelle image
 	 */
 	public int[][] imageDecoupe(int[][] image){
-        //itr=interest(image);
-		int[][] itr=interest(image);// juste pour bellman
-		Graph graph=tograph(itr);
-		//graph.writeFile ("test");
-    	int[] bf = bellman_ford(graph,0,itr.length*itr[0].length+1);
-		int[][] nouveauTableau = new int[image.length][image[0].length-1]; //a modifier
-		int k = 0 ;
-		int l = 0 ;
-		for (int i = 0 ; i < image.length ; i++){
-			//System.out.println (bf[i]);
-			for (int j = 0 ; j < image[0].length - 1 ; j++){
+		int[][] nouveauTableau=new int[image.length][image[0].length - 1];
+		for(int m=0;m<300;m++) {
+			//itr=interest(image);
+			int[][] itr = interest(image);// juste pour bellman
+			Graph graph = tograph(itr);
+		/*	for(Edge e:graph.next(0)){
+			System.out.println(e.to);
+		}
+		for(Edge E:graph.prev(itr.length*itr[0].length+1)){
+			System.out.println(E.from);
+			System.out.println(E.cost);
+		}*/
+			//graph.writeFile ("test");
+			int[] bf = bellman_ford(graph, 0, itr.length * itr[0].length + 1);
+		//		System.out.println(Arrays.toString(bf));
+        //   System.out.println(bf[374]);
+			nouveauTableau = new int[image.length][image[0].length-1]; //a modifier
+			int k = 0;
+			int l = 0;
+			int nb = 0;
+			//	System.out.println(image[0].length);
+			for (int i = 0; i < image.length-1; i++) {
+				//System.out.println (bf[i]);
+				for (int j = 0; j < image[0].length - 1; j++) {
 
-				////////////////////////////////////////////////////////////////////////////////////
-				//c'est la que ça plante j'arrive pas a gerer l'implémentation differente
-				////////////////////////////////////////////////////////////////////////////////////
-				//System.out.print (image[i][j]);
-				if(i*image[0].length+j != bf[i]){//if(image[i][j] != bf[i]){
-					nouveauTableau[i][j] = image[i][j] ;
+					//System.out.print (image[i][j]);
+					if (i * itr[0].length + j != bf[image.length-i-2]) {//if(image[i][j] != bf[i]){
+						nouveauTableau[i][j] = image[i][j];
 
+					} else {
+						//		nb=nb+1;
+						//		System.out.println("vrai"+nb);
+						nouveauTableau[i][j] = image[i][j + 1];
+					//	nb++;
+				//		System.out.println(nb);
+						//l--;
 
+						//nouveauTableau[i][j] = image[i][j+1];
+						//j++ ;
+					}
 
-				}else{
-					//l--;
-
-					//nouveauTableau[i][j] = image[i][j+1];
-					//j++ ;
 				}
 
+				//System.out.println();
 			}
-
-
-			//System.out.println();
+			image = nouveauTableau;
 		}
 		return nouveauTableau;
 	}
@@ -239,10 +277,9 @@ public class SeamCarving
 
 //int[][] itr=interest(image);
 		//int[][] nouveauTableau ;// = imageDecoupe(graph, image, itr);
-		for (int i = 0 ; i < 300  ; i++){
+		//for (int i = 0 ; i < 300  ; i++){
 			image = imageDecoupe(image);
-		}
-
+//		}
 		writepgm(image,fn);//avec le nouv tab
 
 		//int[][] itr=interest(image);
