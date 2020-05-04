@@ -54,7 +54,7 @@ public class SeamCarving
 		File file;
 		FileWriter writeFile;
 		try {
-			file= new File(this.getClass().getResource("/").getPath()+"new.pgm");
+			file= new File("copie.pgm");
 
 			//si le fichier n'exist pas
 			if (!file.exists()) {
