@@ -15,7 +15,7 @@ public class SeamCarving
    public static int[][] readpgm(String fn)
 	 {		
         try {
-            InputStream f = ClassLoader.getSystemClassLoader().getResourceAsStream(fn);
+            InputStream f = new FileInputStream (fn);//ClassLoader.getSystemClassLoader().getResourceAsStream(fn);
             BufferedReader d = new BufferedReader(new InputStreamReader(f));
             String magic = d.readLine();
             String line = d.readLine();
@@ -39,6 +39,7 @@ public class SeamCarving
         }
 		
         catch(Throwable t) {
+
             t.printStackTrace(System.err) ;
             return null;
         }
@@ -54,7 +55,7 @@ public class SeamCarving
 		File file;
 		FileWriter writeFile;
 		try {
-			file= new File("copie.pgm");
+			file= new File("copie"+filename);
 
 			//si le fichier n'exist pas
 			if (!file.exists()) {
