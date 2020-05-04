@@ -7,6 +7,11 @@ import Java.Edge;
 public class SeamCarving
 {
 
+	/**
+	 * Fonction readpgm qui permet de lire une image au format pgm
+	 * @param fn le nom de l'image
+	 * @return un tableau de int
+	 */
    public static int[][] readpgm(String fn)
 	 {		
         try {
@@ -45,9 +50,6 @@ public class SeamCarving
 	 * @param filename nom de fichier pgm
 	 */
     public void writepgm(int[][] image, String filename){
-
-
-
 		FileOutputStream fop = null;
 		File file;
 		FileWriter writeFile;
@@ -66,7 +68,6 @@ public class SeamCarving
 			for (int i = 0; i < image.length; i++) {
 				for (int j = 0; j < image[0].length; j++) {
 					writeFile.write(image[i][j]+" "); //ecriture
-					//System.out.print (image[i][j]);
 				}
 				writeFile.write("\n"); //changer ligne
 			}
@@ -124,25 +125,17 @@ public class SeamCarving
 
 		for(int i = 0 ; i <= t-s ; i++){
 			valeurDuSommet[i] = Integer.MAX_VALUE ; //+ L'INFINI;
-			//System.out.println (valeurDuSommet[i]);s
 		}
 		valeurDuSommet[s] = 0 ;
 		for (int j = s; j <t; j++) {
                 for (Edge e : g.next(j)) {
-
-
-
                     if (valeurDuSommet[e.to] > (valeurDuSommet[e.from] + e.cost)) { //from sommet de depart , to sommet d'arriver , cost le cout de l'arc
                         valeurDuSommet[e.to] = (valeurDuSommet[e.from] + e.cost);
-                        //	parent[j] = e.from;
                         parent[e.to]=e.from;
-                        // inutile : parent[j] = e.to ;
                     }
                 }
-
 		}
-
-		int[] chemin=chemin(parent,s,t);
+		int[] chemin = chemin(parent,s,t);
 
 		return chemin;
 	}
@@ -156,7 +149,7 @@ public class SeamCarving
      * @return int[] tableau  de point
      */
 	public int[] chemin(int[] parent ,int s,int t){
-        int ptfin=t;
+        int ptfin=t; //la derniere case du tableau
         ArrayList<Integer> parentchemin=new ArrayList<>(t-s+1);
         while(ptfin!=0){
             parentchemin.add(parent[ptfin]);
@@ -167,14 +160,13 @@ public class SeamCarving
         for(int i = 0;i<parentchemin.size();i++){
             chemin[i] = parentchemin.get(i);
         }
-      //  System.out.println(Arrays.toString(chemin));
         return chemin;
     }
 
 
 	/**
 	 * fonction qui créer le graphe correspondant au tableau itr
-	 * @param itr tableau d'itr
+	 * @param itr le tableau des facteurs d'interet
 	 * @return un graph
 	 */
     public  Graph tograph(int[][] itr) {
@@ -212,12 +204,11 @@ public class SeamCarving
 	 * @return la nouvelle image
 	 */
 	public int[][] imageDecoupe(int[][] image){
-		int[][] nouveauTableau=new int[image.length][image[0].length - 1];
-		for(int m=0;m<300;m++) {
+		int[][] nouveauTableau = new int[image.length][image[0].length - 1];
 			int[][] itr = interest(image);
 			Graph graph = tograph(itr);
 			int[] bf = bellman_ford(graph, 0, itr.length * itr[0].length + 1);
-			nouveauTableau = new int[itr.length][itr[0].length-1]; //a modifier
+			nouveauTableau = new int[itr.length][itr[0].length-1];
 			int k = 0;
 			for (int i = 0; i < itr.length; i++) {
 					int j=0;
@@ -232,8 +223,6 @@ public class SeamCarving
                         j++;
 				}
 			}
-			image = nouveauTableau;
-		}
 		return nouveauTableau;
 	}
 
@@ -242,9 +231,12 @@ public class SeamCarving
 	 * fonction qui réduit la taille d’une image bas ́ee sur l’algorithmique des graphes.
 	 * @param fn nom de fichier pgm
 	 */
-	public  void seamCarving(String fn) {
+	public  void seamCarving(String fn, int nbPixelASuppr) {
 		int[][] image=readpgm(fn);
-		image = imageDecoupe(image);
+		for(int i = 0 ; i < nbPixelASuppr ; i++){
+			image = imageDecoupe(image);
+		}
+
 		writepgm(image,fn);
 	}
 

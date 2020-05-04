@@ -13,19 +13,20 @@ public class Main {
      */
     public static void seamCarving(){
         SeamCarving seamCarving=new SeamCarving();
+        int nbPixelASuppr = 300 ;
         System.out.println("entre ce que tu veux faire\n 1: je veux tester char.pgm (apr default)\n 2: je veux test le image dehors");
         Scanner scan = new Scanner(System.in);
         if (scan.hasNext()) {
             String str2 = scan.next();
             if(str2.equals("1")){
-                seamCarving.seamCarving("ressource/IMAGES/chat.pgm");
+                seamCarving.seamCarving("ressource/IMAGES/chat.pgm",nbPixelASuppr);
             }else {
                 if (str2.equals("2")) {
                     System.out.println("entre le image ce que tu veux tranform");
                     Scanner scan2 = new Scanner(System.in);
                     if (scan2.hasNext()) {
                         String str1 = scan2.next();
-                        seamCarving.seamCarving("ressource/IMAGES/" + str1);
+                        seamCarving.seamCarving("ressource/IMAGES/" + str1,nbPixelASuppr);
                     }
                     scan2.close();
                 } else {
